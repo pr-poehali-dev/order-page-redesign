@@ -100,6 +100,23 @@
   }
 }
 
+/* === ЧЕРНЫЙ БАРХАТ — FAVORITES POPUP === */
+
+@keyframes fav-popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.fav-popup {
+  animation: fav-popup-in 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* === ЧЕРНЫЙ БАРХАТ — HEADER === */
 
 .header-nav-link {

@@ -1,6 +1,129 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 
+const NECKLACE_IMG_FAV = "https://cdn.poehali.dev/projects/8049325e-c399-45a6-8b2e-39991e4aa03a/files/1b7e4c0d-d337-4647-8e76-be500d3fe9fe.jpg";
+const EARRINGS_IMG_FAV = "https://cdn.poehali.dev/projects/8049325e-c399-45a6-8b2e-39991e4aa03a/files/793e6332-4a70-4e80-ada9-eb1fcbcaf98c.jpg";
+
+const INITIAL_FAVORITES = [
+  { id: 1, name: "Колье «Изумрудная ночь»", art: "EM-42", price: 12900, img: NECKLACE_IMG_FAV },
+  { id: 2, name: "Серьги «Лесная фея»", art: "LF-07", price: 8500, img: EARRINGS_IMG_FAV },
+  { id: 3, name: "Браслет «Тёмный янтарь»", art: "DA-19", price: 6200, img: NECKLACE_IMG_FAV },
+];
+
+function FavoritesPopup({ onClose }: { onClose: () => void }) {
+  const [items, setItems] = useState(INITIAL_FAVORITES);
+
+  const remove = (id: number) => setItems(prev => prev.filter(i => i.id !== id));
+
+  return (
+    <>
+      {/* OVERLAY */}
+      <div
+        onClick={onClose}
+        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 100 }}
+      />
+
+      {/* POPUP */}
+      <div className="fav-popup" style={{ position: "fixed", top: "88px", right: "40px", zIndex: 101, width: "380px", background: "#2F2E30", borderRadius: "12px", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", overflow: "hidden" }}>
+
+        {/* HEADER */}
+        <div style={{ padding: "18px 20px 14px", borderBottom: "1px solid #3D3B3E", display: "flex", alignItems: "center", gap: "10px" }}>
+          <Icon name="Heart" size={20} style={{ color: "#C6A43F" }} />
+          <span style={{ fontFamily: "'Golos Text', sans-serif", fontSize: "18px", fontWeight: 700, color: "#E6E3DD", flex: 1 }}>
+            Избранное
+          </span>
+          <button
+            onClick={onClose}
+            style={{ background: "none", border: "none", color: "#9A9690", cursor: "pointer", fontSize: "18px", lineHeight: 1, padding: "4px", transition: "color 0.2s" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#C6A43F")}
+            onMouseLeave={e => (e.currentTarget.style.color = "#9A9690")}
+          >✕</button>
+        </div>
+
+        {items.length === 0 ? (
+          /* EMPTY STATE */
+          <div style={{ padding: "40px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", textAlign: "center" }}>
+            <Icon name="Heart" size={60} style={{ color: "#9A9690" }} />
+            <div style={{ fontSize: "16px", color: "#E6E3DD", fontWeight: 600 }}>В избранном пока пусто</div>
+            <div style={{ fontSize: "14px", color: "#9A9690", lineHeight: "1.5" }}>
+              Добавляйте товары, которые вам понравились, и они появятся здесь.
+            </div>
+            <button
+              onClick={onClose}
+              style={{ marginTop: "8px", height: "40px", width: "200px", background: "transparent", border: "1px solid #C6A43F", borderRadius: "8px", color: "#C6A43F", fontSize: "14px", fontWeight: 600, cursor: "pointer", transition: "background 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(198,164,63,0.1)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+            >
+              Перейти в каталог
+            </button>
+          </div>
+        ) : (
+          <>
+            {/* ITEMS LIST */}
+            <div style={{ maxHeight: "340px", overflowY: "auto" }}>
+              {items.map(item => (
+                <div
+                  key={item.id}
+                  className="fav-item"
+                  style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 20px", borderBottom: "1px solid #3D3B3E", transition: "background 0.2s", cursor: "default" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#3D3B3E")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                >
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    style={{ width: "60px", height: "60px", borderRadius: "8px", objectFit: "cover", flexShrink: 0, border: "1px solid #3D3B3E" }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "14px", color: "#E6E3DD", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {item.name}
+                    </div>
+                    <div style={{ fontSize: "12px", color: "#9A9690", marginTop: "2px" }}>Арт. {item.art}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px" }}>
+                      <span style={{ fontSize: "16px", fontWeight: 700, color: "#00A86B" }}>
+                        {item.price.toLocaleString("ru-RU")} ₽
+                      </span>
+                      <button style={{ height: "32px", padding: "0 12px", background: "#00A86B", color: "#1C1B1D", border: "none", borderRadius: "6px", fontSize: "12px", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap", transition: "background 0.2s" }}
+                        onMouseEnter={e => (e.currentTarget.style.background = "#009960")}
+                        onMouseLeave={e => (e.currentTarget.style.background = "#00A86B")}
+                      >
+                        В корзину
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => remove(item.id)}
+                    title="Убрать из избранного"
+                    style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", flexShrink: 0, color: "#C6A43F", transition: "color 0.2s, transform 0.15s" }}
+                    onMouseEnter={e => { e.currentTarget.style.color = "#ff6b6b"; e.currentTarget.style.transform = "scale(1.15)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = "#C6A43F"; e.currentTarget.style.transform = "scale(1)"; }}
+                  >
+                    <Icon name="Heart" size={18} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* FOOTER */}
+            <div style={{ padding: "14px 20px", borderTop: "1px solid #3D3B3E" }}>
+              <div style={{ fontSize: "14px", color: "#9A9690", marginBottom: "10px" }}>
+                Всего в избранном: <strong style={{ color: "#E6E3DD" }}>{items.length} {items.length === 1 ? "товар" : items.length < 5 ? "товара" : "товаров"}</strong>
+              </div>
+              <button
+                style={{ width: "100%", height: "44px", background: "#C6A43F", color: "#1C1B1D", border: "none", borderRadius: "8px", fontSize: "15px", fontWeight: 700, cursor: "pointer", fontFamily: "'Golos Text', sans-serif", transition: "background 0.2s, transform 0.15s" }}
+                onMouseEnter={e => { e.currentTarget.style.background = "#d4b04a"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "#C6A43F"; e.currentTarget.style.transform = "translateY(0)"; }}
+              >
+                Перейти в избранное
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
 const NECKLACE_IMG = "https://cdn.poehali.dev/projects/8049325e-c399-45a6-8b2e-39991e4aa03a/files/1b7e4c0d-d337-4647-8e76-be500d3fe9fe.jpg";
 const EARRINGS_IMG = "https://cdn.poehali.dev/projects/8049325e-c399-45a6-8b2e-39991e4aa03a/files/793e6332-4a70-4e80-ada9-eb1fcbcaf98c.jpg";
 
@@ -29,6 +152,8 @@ export default function CheckoutPage() {
   const [agreeOffer, setAgreeOffer] = useState(false);
   const [agreeData, setAgreeData] = useState(false);
   const [comment, setComment] = useState("");
+  const [favOpen, setFavOpen] = useState(false);
+  const favCount = INITIAL_FAVORITES.length;
 
   const deliveryCost = deliveryOptions.find(d => d.id === delivery)?.price ?? 350;
   const total = 21400 + deliveryCost;
@@ -36,8 +161,11 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen" style={{ background: "#111010", color: "#E6E3DD", fontFamily: "'Golos Text', sans-serif" }}>
 
+      {/* FAVORITES POPUP */}
+      {favOpen && <FavoritesPopup onClose={() => setFavOpen(false)} />}
+
       {/* HEADER */}
-      <header style={{ background: "#1C1B1D", height: "80px" }} className="flex items-center justify-between px-10 relative z-10">
+      <header style={{ background: "#1C1B1D", height: "80px", position: "relative", zIndex: 50 }} className="flex items-center justify-between px-10">
         {/* LOGO */}
         <div style={{ flex: "0 0 200px" }}>
           <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "26px", fontWeight: 600, color: "#C6A43F", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
@@ -48,31 +176,36 @@ export default function CheckoutPage() {
         {/* NAV CENTER */}
         <nav className="flex items-center gap-8">
           {["Каталог", "О магазине", "Доставка и оплата", "Блог", "Контакты"].map(item => (
-            <a
-              key={item}
-              href="#"
-              className="header-nav-link"
-            >
-              {item}
-            </a>
+            <a key={item} href="#" className="header-nav-link">{item}</a>
           ))}
         </nav>
 
         {/* ICONS RIGHT */}
         <div className="flex items-center gap-5" style={{ flex: "0 0 200px", justifyContent: "flex-end" }}>
-          {[
-            { icon: "Search", title: "Поиск" },
-            { icon: "Heart", title: "Избранное" },
-            { icon: "ShoppingBag", title: "Корзина" },
-          ].map(({ icon, title }) => (
-            <button
-              key={icon}
-              title={title}
-              className="header-icon-btn"
-            >
-              <Icon name={icon} size={20} />
-            </button>
-          ))}
+          {/* Search */}
+          <button title="Поиск" className="header-icon-btn">
+            <Icon name="Search" size={22} />
+          </button>
+
+          {/* Favorites */}
+          <button
+            title="Избранное"
+            className="header-icon-btn"
+            onClick={() => setFavOpen(v => !v)}
+            style={{ position: "relative", color: favCount > 0 ? "#C6A43F" : "#9A9690" }}
+          >
+            <Icon name="Heart" size={22} />
+            {favCount > 0 && (
+              <span style={{ position: "absolute", top: "-4px", right: "-4px", width: "17px", height: "17px", background: "#E53935", borderRadius: "50%", fontSize: "10px", fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>
+                {favCount}
+              </span>
+            )}
+          </button>
+
+          {/* Cart */}
+          <button title="Корзина" className="header-icon-btn">
+            <Icon name="ShoppingBag" size={22} />
+          </button>
         </div>
       </header>
       <div style={{ height: "1px", background: "#C6A43F" }} />
