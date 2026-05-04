@@ -100,6 +100,61 @@
   }
 }
 
+/* === ЧЕРНЫЙ БАРХАТ — HEADER === */
+
+.header-nav-link {
+  font-size: 14px;
+  color: #e6e3dd;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  font-family: "Golos Text", sans-serif;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.header-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0;
+  height: 1px;
+  background: #c6a43f;
+  transition: width 0.25s ease;
+}
+
+.header-nav-link:hover {
+  color: #c6a43f;
+}
+
+.header-nav-link:hover::after {
+  width: 100%;
+}
+
+.header-icon-btn {
+  background: none;
+  border: none;
+  color: #c6a43f;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    transform 0.15s;
+}
+
+.header-icon-btn:hover {
+  color: #d4b04a;
+  background: rgba(198, 164, 63, 0.1);
+  transform: translateY(-1px);
+}
+
 /* === ЧЕРНЫЙ БАРХАТ — CHECKOUT STYLES === */
 
 .checkout-section {

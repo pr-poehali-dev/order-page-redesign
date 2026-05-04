@@ -37,23 +37,45 @@ export default function CheckoutPage() {
     <div className="min-h-screen" style={{ background: "#111010", color: "#E6E3DD", fontFamily: "'Golos Text', sans-serif" }}>
 
       {/* HEADER */}
-      <header style={{ background: "#1C1B1D", height: "70px" }} className="flex items-center justify-between px-8 relative z-10">
-        <div className="flex items-center gap-2">
-          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", fontWeight: 600, color: "#C6A43F", letterSpacing: "0.08em" }}>
+      <header style={{ background: "#1C1B1D", height: "80px" }} className="flex items-center justify-between px-10 relative z-10">
+        {/* LOGO */}
+        <div style={{ flex: "0 0 200px" }}>
+          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "26px", fontWeight: 600, color: "#C6A43F", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>
             Черный бархат
           </span>
         </div>
-        <a
-          href="#"
-          className="transition-colors duration-200 flex items-center gap-1"
-          style={{ fontSize: "14px", color: "#9A9690", textDecoration: "none" }}
-          onMouseEnter={e => (e.currentTarget.style.color = "#C6A43F")}
-          onMouseLeave={e => (e.currentTarget.style.color = "#9A9690")}
-        >
-          ← Вернуться в корзину
-        </a>
+
+        {/* NAV CENTER */}
+        <nav className="flex items-center gap-8">
+          {["Каталог", "О магазине", "Доставка и оплата", "Блог", "Контакты"].map(item => (
+            <a
+              key={item}
+              href="#"
+              className="header-nav-link"
+            >
+              {item}
+            </a>
+          ))}
+        </nav>
+
+        {/* ICONS RIGHT */}
+        <div className="flex items-center gap-5" style={{ flex: "0 0 200px", justifyContent: "flex-end" }}>
+          {[
+            { icon: "Search", title: "Поиск" },
+            { icon: "Heart", title: "Избранное" },
+            { icon: "ShoppingBag", title: "Корзина" },
+          ].map(({ icon, title }) => (
+            <button
+              key={icon}
+              title={title}
+              className="header-icon-btn"
+            >
+              <Icon name={icon} size={20} />
+            </button>
+          ))}
+        </div>
       </header>
-      <div style={{ height: "1px", background: "#C6A43F", opacity: 0.6 }} />
+      <div style={{ height: "1px", background: "#C6A43F" }} />
 
       {/* BREADCRUMBS */}
       <div className="px-8 py-4" style={{ maxWidth: "1200px", margin: "0 auto" }}>
