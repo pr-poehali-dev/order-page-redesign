@@ -9,6 +9,8 @@ import NotFound from "./pages/NotFound";
 import CheckoutPage from "./pages/CheckoutPage";
 import AccountPage from "./pages/AccountPage";
 import BlogPage from "./pages/BlogPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import ThanksPage from "./pages/ThanksPage";
 
 const queryClient = new QueryClient();
 
@@ -23,8 +25,9 @@ const App = () => (
           <Route path="/index" element={<Index />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/thanks" element={<ThanksPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
