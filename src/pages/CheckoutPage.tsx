@@ -127,6 +127,160 @@ function FavoritesPopup({ onClose }: { onClose: () => void }) {
 const NECKLACE_IMG = "https://cdn.poehali.dev/projects/8049325e-c399-45a6-8b2e-39991e4aa03a/files/1b7e4c0d-d337-4647-8e76-be500d3fe9fe.jpg";
 const EARRINGS_IMG = "https://cdn.poehali.dev/projects/8049325e-c399-45a6-8b2e-39991e4aa03a/files/793e6332-4a70-4e80-ada9-eb1fcbcaf98c.jpg";
 
+const INITIAL_CART = [
+  { id: 1, name: "Колье «Изумрудная ночь»", art: "EM-42", price: 12900, qty: 1, img: NECKLACE_IMG },
+  { id: 2, name: "Серьги «Лесная фея»", art: "LF-07", price: 8500, qty: 2, img: EARRINGS_IMG },
+];
+
+function pluralItems(n: number) {
+  if (n === 1) return "товар";
+  if (n >= 2 && n <= 4) return "товара";
+  return "товаров";
+}
+
+function CartPopup({ onClose }: { onClose: () => void }) {
+  const [items, setItems] = useState(INITIAL_CART);
+
+  const remove = (id: number) => setItems(prev => prev.filter(i => i.id !== id));
+  const changeQty = (id: number, delta: number) =>
+    setItems(prev => prev.map(i => i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i));
+
+  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const totalQty = items.reduce((s, i) => s + i.qty, 0);
+
+  return (
+    <>
+      {/* OVERLAY */}
+      <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 100 }} />
+
+      {/* POPUP */}
+      <div className="fav-popup" style={{ position: "fixed", top: "88px", right: "40px", zIndex: 101, width: "400px", background: "#2F2E30", borderRadius: "12px", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", overflow: "hidden" }}>
+
+        {/* HEADER */}
+        <div style={{ padding: "18px 20px 14px", borderBottom: "1px solid #3D3B3E", display: "flex", alignItems: "center", gap: "10px" }}>
+          <Icon name="ShoppingBag" size={20} style={{ color: "#C6A43F" }} />
+          <span style={{ fontFamily: "'Golos Text', sans-serif", fontSize: "18px", fontWeight: 700, color: "#E6E3DD", flex: 1 }}>
+            Корзина
+          </span>
+          <button
+            onClick={onClose}
+            style={{ background: "none", border: "none", color: "#9A9690", cursor: "pointer", fontSize: "18px", lineHeight: 1, padding: "4px", transition: "color 0.2s" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#C6A43F")}
+            onMouseLeave={e => (e.currentTarget.style.color = "#9A9690")}
+          >✕</button>
+        </div>
+
+        {items.length === 0 ? (
+          /* EMPTY STATE */
+          <div style={{ padding: "40px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", textAlign: "center" }}>
+            <Icon name="ShoppingBag" size={60} style={{ color: "#9A9690" }} />
+            <div style={{ fontSize: "16px", color: "#E6E3DD", fontWeight: 600 }}>Корзина пуста</div>
+            <div style={{ fontSize: "14px", color: "#9A9690", lineHeight: "1.5" }}>
+              Добавьте товары из каталога, чтобы оформить заказ.
+            </div>
+            <button
+              onClick={onClose}
+              style={{ marginTop: "8px", height: "40px", width: "200px", background: "transparent", border: "1px solid #C6A43F", borderRadius: "8px", color: "#C6A43F", fontSize: "14px", fontWeight: 600, cursor: "pointer", transition: "background 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(198,164,63,0.1)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+            >
+              Перейти в каталог
+            </button>
+          </div>
+        ) : (
+          <>
+            {/* ITEMS */}
+            <div style={{ maxHeight: "360px", overflowY: "auto" }}>
+              {items.map(item => (
+                <div
+                  key={item.id}
+                  style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 20px", borderBottom: "1px solid #3D3B3E", transition: "background 0.2s" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#3D3B3E")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                >
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    style={{ width: "64px", height: "64px", borderRadius: "8px", objectFit: "cover", flexShrink: 0, border: "1px solid #3D3B3E" }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "14px", color: "#E6E3DD", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {item.name}
+                    </div>
+                    <div style={{ fontSize: "12px", color: "#9A9690", marginTop: "2px" }}>Арт. {item.art}</div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "8px" }}>
+                      {/* QTY CONTROLS */}
+                      <div style={{ display: "flex", alignItems: "center", gap: "0", border: "1px solid #4A4848", borderRadius: "6px", overflow: "hidden" }}>
+                        <button
+                          onClick={() => changeQty(item.id, -1)}
+                          style={{ width: "28px", height: "28px", background: "transparent", border: "none", color: "#E6E3DD", fontSize: "16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.15s" }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "#4A4848")}
+                          onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                        >−</button>
+                        <span style={{ minWidth: "28px", textAlign: "center", fontSize: "14px", color: "#E6E3DD", fontWeight: 600 }}>{item.qty}</span>
+                        <button
+                          onClick={() => changeQty(item.id, +1)}
+                          style={{ width: "28px", height: "28px", background: "transparent", border: "none", color: "#E6E3DD", fontSize: "16px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.15s" }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "#4A4848")}
+                          onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                        >+</button>
+                      </div>
+                      <span style={{ fontSize: "16px", fontWeight: 700, color: "#00A86B" }}>
+                        {(item.price * item.qty).toLocaleString("ru-RU")} ₽
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => remove(item.id)}
+                    title="Удалить"
+                    style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", flexShrink: 0, color: "#9A9690", transition: "color 0.2s, transform 0.15s" }}
+                    onMouseEnter={e => { e.currentTarget.style.color = "#ff6b6b"; e.currentTarget.style.transform = "scale(1.15)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = "#9A9690"; e.currentTarget.style.transform = "scale(1)"; }}
+                  >
+                    <Icon name="Trash2" size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* FOOTER */}
+            <div style={{ padding: "16px 20px", borderTop: "1px solid #3D3B3E" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                <span style={{ fontSize: "14px", color: "#9A9690" }}>
+                  Товаров: <strong style={{ color: "#E6E3DD" }}>{totalQty} {pluralItems(totalQty)}</strong>
+                </span>
+                <span style={{ fontSize: "14px", color: "#9A9690" }}>Итого:</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "14px" }}>
+                <span style={{ fontSize: "22px", fontWeight: 700, color: "#E6E3DD" }}>
+                  {subtotal.toLocaleString("ru-RU")} ₽
+                </span>
+              </div>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button
+                  onClick={onClose}
+                  style={{ flex: 1, height: "44px", background: "transparent", border: "1px solid #C6A43F", borderRadius: "8px", color: "#C6A43F", fontSize: "14px", fontWeight: 600, cursor: "pointer", transition: "background 0.2s" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "rgba(198,164,63,0.1)")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                >
+                  В корзину
+                </button>
+                <button
+                  style={{ flex: 2, height: "44px", background: "#C6A43F", color: "#1C1B1D", border: "none", borderRadius: "8px", fontSize: "15px", fontWeight: 700, cursor: "pointer", fontFamily: "'Golos Text', sans-serif", transition: "background 0.2s, transform 0.15s" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "#d4b04a"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "#C6A43F"; e.currentTarget.style.transform = "translateY(0)"; }}
+                >
+                  Оформить заказ
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
 const deliveryOptions = [
   { id: "courier_moscow", label: "Курьером по Москве", price: 350, days: "1-2 дня" },
   { id: "cdek_pickup", label: "СДЭК до пункта выдачи", price: 450, days: "2-4 дня" },
@@ -153,7 +307,9 @@ export default function CheckoutPage() {
   const [agreeData, setAgreeData] = useState(false);
   const [comment, setComment] = useState("");
   const [favOpen, setFavOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const favCount = INITIAL_FAVORITES.length;
+  const cartCount = INITIAL_CART.reduce((s, i) => s + i.qty, 0);
 
   const deliveryCost = deliveryOptions.find(d => d.id === delivery)?.price ?? 350;
   const total = 21400 + deliveryCost;
@@ -163,6 +319,9 @@ export default function CheckoutPage() {
 
       {/* FAVORITES POPUP */}
       {favOpen && <FavoritesPopup onClose={() => setFavOpen(false)} />}
+
+      {/* CART POPUP */}
+      {cartOpen && <CartPopup onClose={() => setCartOpen(false)} />}
 
       {/* HEADER */}
       <header style={{ background: "#1C1B1D", height: "80px", position: "relative", zIndex: 50 }} className="flex items-center justify-between px-10">
@@ -191,7 +350,7 @@ export default function CheckoutPage() {
           <button
             title="Избранное"
             className="header-icon-btn"
-            onClick={() => setFavOpen(v => !v)}
+            onClick={() => { setFavOpen(v => !v); setCartOpen(false); }}
             style={{ position: "relative", color: favCount > 0 ? "#C6A43F" : "#9A9690" }}
           >
             <Icon name="Heart" size={22} />
@@ -203,8 +362,18 @@ export default function CheckoutPage() {
           </button>
 
           {/* Cart */}
-          <button title="Корзина" className="header-icon-btn">
+          <button
+            title="Корзина"
+            className="header-icon-btn"
+            onClick={() => { setCartOpen(v => !v); setFavOpen(false); }}
+            style={{ position: "relative", color: cartCount > 0 ? "#C6A43F" : "#9A9690" }}
+          >
             <Icon name="ShoppingBag" size={22} />
+            {cartCount > 0 && (
+              <span style={{ position: "absolute", top: "-4px", right: "-4px", width: "17px", height: "17px", background: "#E53935", borderRadius: "50%", fontSize: "10px", fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>
+                {cartCount}
+              </span>
+            )}
           </button>
         </div>
       </header>
