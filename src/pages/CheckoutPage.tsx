@@ -375,6 +375,11 @@ export default function CheckoutPage() {
               </span>
             )}
           </button>
+
+          {/* Account */}
+          <a href="/account" title="Личный кабинет" style={{ color: "#9A9690", display: "flex", alignItems: "center" }}>
+            <Icon name="User" size={22} />
+          </a>
         </div>
       </header>
       <div style={{ height: "1px", background: "#C6A43F" }} />
