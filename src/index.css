@@ -339,6 +339,35 @@
     background 0.2s;
 }
 
+/* === ЧЕРНЫЙ БАРХАТ — FOOTER RESPONSIVE === */
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.footer-payments {
+  border-top: 1px solid #3d3b3e;
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 800px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 24px;
+  }
+
+  .footer-brand-col {
+    grid-column: 1 / -1;
+  }
+}
+
 .social-icon:hover {
   color: #c6a43f;
   border-color: #c6a43f;

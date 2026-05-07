@@ -23,14 +23,14 @@ export function SharedFooter() {
   return (
     <footer style={{ background: "#1C1B1D", borderTop: "1px solid #3D3B3E", padding: "48px 0 24px" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 32px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr", gap: "32px", marginBottom: "32px" }}>
-          <div>
+        <div className="footer-grid">
+          <div className="footer-brand-col">
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "20px", fontWeight: 600, color: "#C6A43F", marginBottom: "12px" }}>Черный бархат</div>
             <p style={{ fontSize: "14px", color: "#9A9690", lineHeight: "1.6", marginBottom: "16px" }}>Украшения ручной работы. Сделано с любовью и изумрудом.</p>
             <div style={{ fontSize: "14px", color: "#9A9690" }}>© 2026 Черный бархат</div>
           </div>
           <div>
-            <div style={{ fontSize: "18px", fontWeight: 700, color: "#E6E3DD", marginBottom: "16px" }}>Каталог</div>
+            <div style={{ fontSize: "16px", fontWeight: 700, color: "#E6E3DD", marginBottom: "16px" }}>Каталог</div>
             {["Кольца", "Серьги", "Колье", "Браслеты"].map(l => (
               <a key={l} href="#" style={{ display: "block", fontSize: "14px", color: "#9A9690", textDecoration: "none", marginBottom: "10px", transition: "color 0.15s" }}
                 onMouseEnter={e => (e.currentTarget.style.color = "#C6A43F")}
@@ -38,7 +38,7 @@ export function SharedFooter() {
             ))}
           </div>
           <div>
-            <div style={{ fontSize: "18px", fontWeight: 700, color: "#E6E3DD", marginBottom: "16px" }}>Помощь</div>
+            <div style={{ fontSize: "16px", fontWeight: 700, color: "#E6E3DD", marginBottom: "16px" }}>Помощь</div>
             {["Доставка и оплата", "Возврат", "Частые вопросы", "Политика конфиденциальности"].map(l => (
               <a key={l} href="#" style={{ display: "block", fontSize: "14px", color: "#9A9690", textDecoration: "none", marginBottom: "10px", transition: "color 0.15s" }}
                 onMouseEnter={e => (e.currentTarget.style.color = "#C6A43F")}
@@ -46,11 +46,11 @@ export function SharedFooter() {
             ))}
           </div>
           <div>
-            <div style={{ fontSize: "18px", fontWeight: 700, color: "#E6E3DD", marginBottom: "16px" }}>Контакты</div>
+            <div style={{ fontSize: "16px", fontWeight: 700, color: "#E6E3DD", marginBottom: "16px" }}>Контакты</div>
             {["+7 (999) 123-45-67", "info@chernybarhat.ru", "Москва, ул. Тверская, 12"].map(c => (
               <div key={c} style={{ fontSize: "14px", color: "#9A9690", marginBottom: "10px" }}>{c}</div>
             ))}
-            <div style={{ display: "flex", gap: "14px", marginTop: "16px" }}>
+            <div style={{ display: "flex", gap: "14px", marginTop: "16px", flexWrap: "wrap" }}>
               {[{ icon: "Send", label: "Telegram" }, { icon: "Instagram", label: "Instagram" }, { icon: "Users", label: "VK" }, { icon: "MessageCircle", label: "WhatsApp" }].map(s => (
                 <a key={s.label} href="#" title={s.label} style={{ color: "#9A9690", display: "flex", transition: "color 0.15s" }}
                   onMouseEnter={e => (e.currentTarget.style.color = "#C6A43F")}
@@ -60,7 +60,7 @@ export function SharedFooter() {
             </div>
           </div>
         </div>
-        <div style={{ borderTop: "1px solid #3D3B3E", paddingTop: "20px", display: "flex", justifyContent: "center", gap: "20px" }}>
+        <div className="footer-payments">
           {["Visa", "Mastercard", "МИР", "SBP", "Оплата частями"].map(p => (
             <span key={p} style={{ fontSize: "13px", color: "#9A9690", background: "#2F2E30", padding: "4px 12px", borderRadius: "6px", border: "1px solid #3D3B3E" }}>{p}</span>
           ))}
